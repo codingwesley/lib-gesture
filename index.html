@@ -75,11 +75,12 @@ body > div {
 </head>
 <body>
 <div>
+<canvas width=1000 height=1000 style="position:absolute;"></canvas>
 	<div class="viewport">
 		<div class="active"></div>
 		<div class="inactive"></div>
 	</div>
-	<div class="log" style="">
+	<div class="log" style="display:;">
 		<span>打开/关闭</span>
 		<div></div>
 	</div>
@@ -88,6 +89,10 @@ body > div {
 <script type="text/javascript">
 	var logEl = document.querySelector('.log'),
 		logDiv = document.querySelector('.log > div');
+		
+	var canvas = document.querySelector("canvas");
+	var ctx = canvas.getContext("2d");
+	var xxx = 0;
 
 	logEl.querySelector('span').addEventListener('click', function() {
 		if (logEl.isShow) {

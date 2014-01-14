@@ -101,6 +101,7 @@ function touchstartHandler(event) {
 }
 
 
+
 function touchmoveHandler(event) {
     for(var i = 0 ; i < event.changedTouches.length ; i++ ) {
         var touch = event.changedTouches[i],
@@ -109,11 +110,58 @@ function touchmoveHandler(event) {
         if (!gesture) {
             return;
         }
+        
+        if(!gesture.lastTouch) {
+            gesture.lastTouch = gesture.startTouch;
+        }
+        if(!gesture.lastTime) {
+            gesture.lastTime = gesture.startTime;
+        }
+        if(!gesture.velocityX) {
+            gesture.velocityX = 0;
+        }
+        if(!gesture.velocityY) {
+            gesture.velocityY = 0;
+        }
+        if(!gesture.duration) {
+            gesture.duration = 0;
+        }
+        
+        var time =  Date.now()-gesture.lastTime;
+        var vx = (touch.clientX - gesture.lastTouch.clientX)/time,
+            vy = (touch.clientY - gesture.lastTouch.clientY)/time;
+        
+            
+        var RECORD_DURATION = 70;
+        if( time > RECORD_DURATION ) {
+            time = RECORD_DURATION;
+        }
+        if( gesture.duration + time > RECORD_DURATION ) {
+            gesture.duration = RECORD_DURATION - time;
+        }
+
+        gesture.velocityX = (gesture.velocityX * gesture.duration + vx * time) / (gesture.duration+ time);
+        gesture.velocityY = (gesture.velocityY * gesture.duration + vy * time) / (gesture.duration+ time);
+        gesture.duration += time;
+
+        gesture.lastTouch = {};
+        
+        for (var p in touch) {
+            gesture.lastTouch[p] = touch[p];
+        }
+        gesture.lastTime = Date.now();
+        
+        //if(gesture.duration>=300)
+        
+        //ctx.lineTo(xxx+=2,gesture.velocityY*100+200);
+        //ctx.stroke();
+        
+        console.log([gesture.velocityX, gesture.velocityY])
 
         var displacementX = touch.clientX - gesture.startTouch.clientX,
             displacementY = touch.clientY - gesture.startTouch.clientY,
             distance = Math.sqrt(Math.pow(displacementX, 2) + Math.pow(displacementY, 2));
-
+        
         // magic number 10: moving 10px means pan, not tap
         if (gesture.status === 'tapping' && distance > 10) {
             gesture.status = 'panning';
@@ -241,17 +289,19 @@ function touchendHandler(event) {
                 displacementY = touch.clientY - gesture.startTouch.clientY
                 ;
 
+            var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
+
             fireEvent(gesture.element, 'panend', {
-                isflick: duration < 300,
+                isflick: velocity > 0.5 ,
                 touch: touch,
                 touchEvent: event
             });
             
-            if (duration < 300) {
+            if (velocity > 0.5 ) {
                 fireEvent(gesture.element, 'flick', {
                     duration: duration,
-                    velocityX: velocityX,
-                    velocityY: velocityY,
+                    velocityX: gesture.velocityX,
+                    velocityY: gesture.velocityY,
                     displacementX: displacementX,
                     displacementY: displacementY,
                     touch: touch,
@@ -261,7 +311,7 @@ function touchendHandler(event) {
                 if(gesture.isVertical) {
                     fireEvent(gesture.element, 'verticalflick', {
                         duration: duration,
-                        velocityY: velocityY,
+                        velocityY: gesture.velocityY,
                         displacementY: displacementY,
                         touch: touch,
                         touchEvent: event
@@ -269,7 +319,7 @@ function touchendHandler(event) {
                 } else {
                     fireEvent(gesture.element, 'horizontalflick', {
                         duration: duration,
-                        velocityX: velocityX,
+                        velocityX: gesture.velocityX,
                         displacementX: displacementX,
                         touch: touch,
                         touchEvent: event

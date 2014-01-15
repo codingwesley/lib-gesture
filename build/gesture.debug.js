@@ -156,7 +156,7 @@ function touchmoveHandler(event) {
         //ctx.lineTo(xxx+=2,gesture.velocityY*100+200);
         //ctx.stroke();
         
-        console.log([gesture.velocityX, gesture.velocityY])
+        //console.log([gesture.velocityX, gesture.velocityY])
 
         var displacementX = touch.clientX - gesture.startTouch.clientX,
             displacementY = touch.clientY - gesture.startTouch.clientY,

@@ -278,7 +278,7 @@ function touchendHandler(event) {
                 });
             }
 
-            this.lastTap = gesture;
+            lastTap = gesture;
         }
 
         if (gesture.status === 'panning') {

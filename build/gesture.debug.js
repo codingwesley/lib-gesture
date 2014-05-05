@@ -150,13 +150,6 @@ function touchmoveHandler(event) {
             gesture.lastTouch[p] = touch[p];
         }
         gesture.lastTime = Date.now();
-        
-        //if(gesture.duration>=300)
-        
-        //ctx.lineTo(xxx+=2,gesture.velocityY*100+200);
-        //ctx.stroke();
-        
-        //console.log([gesture.velocityX, gesture.velocityY])
 
         var displacementX = touch.clientX - gesture.startTouch.clientX,
             displacementY = touch.clientY - gesture.startTouch.clientY,
@@ -290,14 +283,16 @@ function touchendHandler(event) {
                 ;
 
             var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
+            var now = Date.now();
+            var isflick = velocity > 0.5 && now - (gesture.lastTime < 10);
 
             fireEvent(gesture.element, 'panend', {
-                isflick: velocity > 0.5 ,
+                isflick: isflick,
                 touch: touch,
                 touchEvent: event
             });
             
-            if (velocity > 0.5 ) {
+            if (isflick) {
                 fireEvent(gesture.element, 'flick', {
                     duration: duration,
                     velocityX: gesture.velocityX,

@@ -185,7 +185,7 @@ function touchmoveHandler(event) {
                 displacementY: displacementY,
                 touch: touch,
                 touchEvent: event,
-                isVertical:gesture.isVertical
+                isVertical: gesture.isVertical
             });
 
 
@@ -302,7 +302,7 @@ function touchendHandler(event) {
                     displacementY: displacementY,
                     touch: touch,
                     touchEvent: event,
-                    isVertical:gesture.isVertical
+                    isVertical: gesture.isVertical
                 });
 
                 if(gesture.isVertical) {

@@ -158,24 +158,18 @@ function touchmoveHandler(event) {
         // magic number 10: moving 10px means pan, not tap
         if (gesture.status === 'tapping' && distance > 10) {
             gesture.status = 'panning';
+            gesture.isVertical = !(Math.abs(displacementX) > Math.abs(displacementY));
+
             fireEvent(gesture.element, 'panstart', {
                 touch:touch,
-                touchEvent:event
+                touchEvent:event,
+                isVertical: gesture.isVertical
             });
 
-            if(Math.abs(displacementX) > Math.abs(displacementY)) {
-                fireEvent(gesture.element, 'horizontalpanstart', {
-                    touch: touch,
-                    touchEvent: event
-                });
-                gesture.isVertical = false;
-            } else {
-                fireEvent(gesture.element, 'verticalpanstart', {
-                    touch: touch,
-                    touchEvent: event
-                });
-                gesture.isVertical = true;
-            }
+            fireEvent(gesture.element, (gesture.isVertical?'vertical':'horizontal') + 'panstart', {
+                touch: touch,
+                touchEvent: event
+            });
         }
 
         if (gesture.status === 'panning') {
@@ -290,7 +284,8 @@ function touchendHandler(event) {
             fireEvent(gesture.element, 'panend', {
                 isflick: isflick,
                 touch: touch,
-                touchEvent: event
+                touchEvent: event,
+                isVertical: gesture.isVertical
             });
             
             if (isflick) {

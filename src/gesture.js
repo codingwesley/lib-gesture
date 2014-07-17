@@ -370,7 +370,7 @@ function touchendHandler(event) {
 
             var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
             var now = Date.now();
-            var isflick = velocity > 0.5 && now - (gesture.lastTime < 10);
+            var isflick = velocity > 0.5 && (now - gesture.lastTime) < 10;
 
             fireEvent(gesture.element, 'panend', {
                 isflick: isflick,

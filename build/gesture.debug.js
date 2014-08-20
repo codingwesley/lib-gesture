@@ -270,7 +270,8 @@ function touchendHandler(event) {
         }
 
         if (gesture.status === 'panning') {
-            var duration = Date.now() - gesture.startTime,
+            var now = Date.now();
+            var duration = now - gesture.startTime,
                 velocityX = (touch.clientX - gesture.startTouch.clientX) / duration,
                 velocityY = (touch.clientY - gesture.startTouch.clientY) / duration,
                 displacementX = touch.clientX - gesture.startTouch.clientX,
@@ -278,8 +279,7 @@ function touchendHandler(event) {
                 ;
 
             var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
-            var now = Date.now();
-            var isflick = velocity > 0.5 && now - (gesture.lastTime < 10);
+            var isflick = velocity > 0.5 && (now - gesture.lastTime) < 16;
 
             fireEvent(gesture.element, 'panend', {
                 isflick: isflick,

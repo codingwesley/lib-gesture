@@ -221,7 +221,7 @@ function touchmoveHandler(event) {
             distance = Math.sqrt(Math.pow(displacementX, 2) + Math.pow(displacementY, 2));
         
         // magic number 10: moving 10px means pan, not tap
-        if (gesture.status === 'tapping' && distance > 10) {
+        if ((gesture.status === 'tapping' || gesture.status === 'pressing') && distance > 10) {
             gesture.status = 'panning';
             gesture.isVertical = !(Math.abs(displacementX) > Math.abs(displacementY));
 

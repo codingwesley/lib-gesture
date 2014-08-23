@@ -221,7 +221,7 @@ function touchmoveHandler(event) {
             distance = Math.sqrt(Math.pow(displacementX, 2) + Math.pow(displacementY, 2));
         
         // magic number 10: moving 10px means pan, not tap
-        if (gesture.status === 'tapping' && distance > 10) {
+        if ((gesture.status === 'tapping' || gesture.status === 'pressing') && distance > 10) {
             gesture.status = 'panning';
             gesture.isVertical = !(Math.abs(displacementX) > Math.abs(displacementY));
 
@@ -354,7 +354,8 @@ function touchendHandler(event) {
         }
 
         if (gesture.status === 'panning') {
-            var duration = Date.now() - gesture.startTime,
+            var now = Date.now();
+            var duration = now - gesture.startTime,
                 // TODO: velocityX & velocityY never used
                 velocityX = (touch.clientX - gesture.startTouch.clientX) / duration,
                 velocityY = (touch.clientY - gesture.startTouch.clientY) / duration,
@@ -363,8 +364,7 @@ function touchendHandler(event) {
                 ;
 
             var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
-            var now = Date.now();
-            var isflick = velocity > 0.5 && (now - gesture.lastTime) < 10;
+            var isflick = velocity > 0.5;
 
             fireEvent(gesture.element, 'panend', {
                 isflick: isflick,

@@ -1,48 +1,48 @@
 'use strict';
 
 module.exports = function(grunt) {
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-		name: 'gesture',
-		srcPath: 'src',
-		assetsPath: 'assets',
-		distPath: 'build',
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+        name: 'gesture',
+        srcPath: 'src',
+        assetsPath: 'assets',
+        distPath: 'build',
 
-		clean: ['<%= distPath%>/*'],
+        clean: ['<%= distPath%>/*'],
 
-		copy: {
-			main: {
-				files: [{
-					expand: true,
-					cwd: './',
-					src: ['package.json'],
-					dest: '<%= distPath %>'
-				}]
-			}
-		},
+        copy: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: './',
+                    src: ['package.json'],
+                    dest: '<%= distPath %>'
+                }]
+            }
+        },
 
-		depconcat: {
-			options: {
-				separator: '\n'
-			},
-		
-			main: {
-				src: ['<%= srcPath %>/<%= name %>.js'],
-				dest: '<%= distPath %>/<%= name %>.debug.js'
-			}
-		},
+        depconcat: {
+            options: {
+                separator: '\n'
+            },
+        
+            main: {
+                src: ['<%= srcPath %>/<%= name %>.js'],
+                dest: '<%= distPath %>/<%= name %>.debug.js'
+            }
+        },
 
-		uglify: {
-			main: {
-				files: [{
-					expand: true,
-					cwd: '<%= distPath %>',
-					src: ['*.debug.js'],
-					dest: '<%= distPath %>',
-					ext: '.js'
-				}]
-			}
-		},
+        uglify: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= distPath %>',
+                    src: ['*.debug.js'],
+                    dest: '<%= distPath %>',
+                    ext: '.js'
+                }]
+            }
+        },
 
 		watch: {
 			js: {

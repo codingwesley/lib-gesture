@@ -49,17 +49,30 @@ module.exports = function(grunt) {
 				files: ['<%= srcPath %>/*.js', '<%= srcPath %>/**/*.js'],
 				tasks: ['depconcat', 'uglify']
 			}
-		}
+		},
+
+        cmdwrap: {
+            js: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= distPath %>',
+                    src: ['gesture.js'],
+                    dest: '<%= distPath %>',
+                    ext: '.cmd.js'
+                }]
+            }
+        }
 	});
 
 	grunt.loadNpmTasks('grunt-depconcat');
+	grunt.loadNpmTasks('grunt-cmdwrap');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	
 
-	grunt.registerTask('dist', ['copy', 'depconcat', 'uglify']);
+	grunt.registerTask('dist', ['copy', 'depconcat', 'uglify', 'cmdwrap']);
 	grunt.registerTask('dev', ['watch']);
 	
 	grunt.registerTask('default', ['dist']);

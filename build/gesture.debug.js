@@ -364,43 +364,27 @@ function touchendHandler(event) {
                 ;
 
             var velocity = Math.sqrt(gesture.velocityY*gesture.velocityY+gesture.velocityX*gesture.velocityX);
-            var isflick = velocity > 0.5;
-
-            fireEvent(gesture.element, 'panend', {
+            var isflick = velocity > 0.5 && (now - gesture.lastTime) < 100;
+            var extra = {
+                duration: duration,
                 isflick: isflick,
+                velocityX: gesture.velocityX,
+                velocityY: gesture.velocityY,
+                displacementX: displacementX,
+                displacementY: displacementY,
                 touch: touch,
                 touchEvent: event,
                 isVertical: gesture.isVertical
-            });
-            
+            }
+
+            fireEvent(gesture.element, 'panend', extra);
             if (isflick) {
-                fireEvent(gesture.element, 'flick', {
-                    duration: duration,
-                    velocityX: gesture.velocityX,
-                    velocityY: gesture.velocityY,
-                    displacementX: displacementX,
-                    displacementY: displacementY,
-                    touch: touch,
-                    touchEvent: event,
-                    isVertical: gesture.isVertical
-                });
+                fireEvent(gesture.element, 'flick', extra);
 
                 if(gesture.isVertical) {
-                    fireEvent(gesture.element, 'verticalflick', {
-                        duration: duration,
-                        velocityY: gesture.velocityY,
-                        displacementY: displacementY,
-                        touch: touch,
-                        touchEvent: event
-                    });
+                    fireEvent(gesture.element, 'verticalflick', extra);
                 } else {
-                    fireEvent(gesture.element, 'horizontalflick', {
-                        duration: duration,
-                        velocityX: gesture.velocityX,
-                        displacementX: displacementX,
-                        touch: touch,
-                        touchEvent: event
-                    });
+                    fireEvent(gesture.element, 'horizontalflick', extra);
                 }
             }
         }

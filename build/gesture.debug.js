@@ -114,7 +114,7 @@ function touchstartHandler(event) {
             startTouch: touchRecord,
             startTime: Date.now(),
             status: 'tapping',
-            element: event.srcElement,
+            element: event.srcElement || event.target,
             // TODO: Don't make functions within a loop
             pressingHandler: setTimeout(function(element) {
                 return function () {
@@ -129,7 +129,7 @@ function touchstartHandler(event) {
                     clearTimeout(gesture.pressingHandler);
                     gesture.pressingHandler = null;
                 };
-            }(event.srcElement), 500)
+            }(event.srcElement || event.target), 500)
         };
         gestures[touch.identifier] = gesture;
     }
